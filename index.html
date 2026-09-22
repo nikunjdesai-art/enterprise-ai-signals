@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Before the Prompt — Enterprise AI Signals</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&amp;family=Space+Grotesk:wght@400;500;600&amp;display=swap" rel="stylesheet">
+
+<style>
+:root{--paper:#f5f0e8;--light:#fbf8f3;--ink:#29241f;--muted:#6d645a;--gold:#c98738;--orange:#d85a2a;--line:rgba(41,36,31,.14);--white:#fff;--serif:"Cormorant Garamond",Georgia,serif;--sans:"Space Grotesk",Arial,sans-serif;--shadow:0 14px 40px rgba(67,48,37,.10)}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.65;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:34px 5vw 64px}header{display:flex;justify-content:space-between;gap:28px;align-items:flex-start;margin-bottom:26px}
+.eyebrow{color:var(--gold);font-size:.75rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase}h1{font-family:var(--serif);font-size:clamp(2.8rem,5.2vw,5.4rem);font-weight:600;line-height:1.03;letter-spacing:-.035em;margin:10px 0 14px;max-width:900px}.sub{color:var(--muted);max-width:720px;line-height:1.65;font-size:1.02rem}.brand{text-align:right;color:var(--muted);font-size:13px}
+.tabs{display:flex;gap:8px;border-bottom:1px solid var(--line);margin-bottom:22px}.tab{border:0;background:transparent;padding:12px 14px;font-family:var(--sans);font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent}.tab.active{color:var(--ink);border-bottom-color:var(--orange)}.section{display:none}.section.active{display:block}
+.summary{background:linear-gradient(135deg,#fffaf3,#f0e4d8);border:1px solid var(--line);border-radius:0;padding:26px;box-shadow:none;margin-bottom:18px}.summary h2{font:600 30px/1.2 var(--serif);margin:8px 0 10px}.summary p{font-size:16px;line-height:1.65;color:#4c4039;max-width:930px}
+.trend-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:16px 0 18px}.trend-card{background:var(--light);border:1px solid var(--line);border-radius:0;padding:18px;box-shadow:none}.trend-card h3{font:600 21px/1.25 var(--serif);margin:4px 0 9px}.trend-card p{font-size:14px;line-height:1.55;color:#4c4039}.trend-card .why{margin-top:10px;color:var(--ink);font-weight:650}.trend-card .sources{margin-top:12px;font-size:12px;color:var(--muted);line-height:1.5}
+.connect{background:var(--ink);color:white;border-radius:0;padding:22px;margin:18px 0}.connect .label,.summary .label,.glossary .label,.question .label{font-size:11px;text-transform:uppercase;letter-spacing:.1em;font-weight:800}.connect .label{opacity:.7}.connect h3{font:500 25px/1.35 var(--serif);margin:8px 0 0}
+.glossary{background:var(--light);border:1px solid var(--line);border-radius:0;padding:20px;margin:18px 0}.glossary .label,.question .label{color:var(--gold)}.gloss-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 18px;margin-top:12px}.term{padding:12px;background:#fbf5ee;border:1px solid var(--line);border-radius:12px}.term b{display:block;margin-bottom:5px}.term span{font-size:13px;line-height:1.45;color:#554941}
+
+.question{background:var(--light);border:1px solid var(--line);border-radius:0;padding:20px}.question p{font:500 23px/1.45 var(--serif);margin:8px 0}
+.toolbar{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;margin-bottom:14px}.filterbox{width:min(360px,100%)}label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:800;margin-bottom:7px}select{width:100%;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 13px;color:var(--ink)}.count{font-size:13px;color:var(--muted)}
+.signal-list{display:grid;gap:12px}.signal{background:var(--light);border:1px solid var(--line);border-radius:0;padding:18px;cursor:pointer;transition:.15s ease}.signal:hover{transform:translateY(-1px);box-shadow:none}.signal h3{font:600 20px/1.25 var(--serif);margin:0 0 7px}.tags{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}.tag{font-size:11px;background:rgba(41,36,31,.06);color:var(--ink);padding:5px 8px;border-radius:999px}.signal .why{font-size:14px;line-height:1.5;color:#4c4039}.signal .bottom{display:flex;justify-content:space-between;gap:10px;margin-top:11px;font-size:12px;color:var(--muted)}.open{font-weight:800;color:var(--ink)}
+.modal{position:fixed;inset:0;background:rgba(35,26,22,.46);display:none;justify-content:flex-end;z-index:50}.modal.show{display:flex}.drawer{width:min(620px,100%);height:100%;background:var(--light);padding:28px;overflow:auto;box-shadow:-20px 0 45px rgba(0,0,0,.18)}.close{float:right;border:0;background:rgba(41,36,31,.06);width:36px;height:36px;border-radius:50%;font-size:21px;cursor:pointer}.drawer h2{font:600 30px/1.15 var(--serif);margin:20px 0 8px}.block{border-top:1px solid var(--line);padding-top:16px;margin-top:18px}.block h4{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:0 0 7px}.block p{line-height:1.6;color:#4c4039;margin:0}.links{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.links a{background:var(--ink);color:white;text-decoration:none;padding:9px 12px;border-radius:10px;font-size:13px;font-weight:700}
+@media(max-width:900px){.trend-grid{grid-template-columns:1fr}.gloss-grid{grid-template-columns:1fr}}@media(max-width:760px){header{flex-direction:column;align-items:flex-start}.weekbox{align-items:flex-start}.brand{text-align:left}.toolbar{align-items:flex-start;flex-direction:column}h1{font-size:31px}}
+
+.weekbox{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.weeklabel{font-size:12px;color:var(--muted);background:var(--light);border:1px solid var(--line);padding:8px 11px;border-radius:999px}
+.linkedin-cta{display:inline-flex;align-items:center;gap:7px;background:var(--ink);color:#fff;text-decoration:none;padding:9px 12px;border-radius:999px;font-size:12px;font-weight:800}
+.linkedin-cta:hover{opacity:.92}
+.btp-lockup{display:flex;flex-direction:column}
+.btp-name{font:600 18px/1.2 var(--serif);color:var(--ink)}
+.btp-tag{font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
+
+
+
+.brand-lockup{display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand-mark{width:34px;height:34px;flex:0 0 auto}
+.brand-name{font:600 1.35rem/1 var(--serif);color:var(--ink)}
+.brand-name em{color:var(--gold);font-weight:500}
+.brand-meta{display:flex;flex-direction:column;gap:3px}
+.brand-kicker{color:var(--gold);font-size:.75rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase}
+.brand-url{color:var(--muted);font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.weekbox{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.weeklabel{font-size:.74rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.linkedin-cta{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:7px 10px;background:transparent;color:var(--muted);font-weight:600;font-size:.76rem;text-decoration:none;border:1px solid var(--line);transition:.18s ease}
+.linkedin-cta:hover{color:var(--ink);border-color:var(--gold);transform:translateY(-1px)}
+.site-footer{margin-top:34px;border-top:1px solid var(--line);padding-top:14px;display:flex;justify-content:space-between;gap:14px;color:var(--muted);font-size:.8rem}
+
+/* === 3-WEEK ARCHIVE / WEEK SWITCHER === */
+.week-archive{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  margin:4px 0 24px;
+  padding:14px 0 16px;
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+}
+.week-archive-label{
+  font-size:.72rem;
+  font-weight:600;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--muted);
+  white-space:nowrap;
+}
+.week-pills{display:flex;gap:8px;flex-wrap:wrap}
+.week-pill{
+  border:1px solid var(--line);
+  background:var(--light);
+  color:var(--muted);
+  padding:9px 12px;
+  font-family:var(--sans);
+  font-size:.74rem;
+  font-weight:600;
+  cursor:pointer;
+  transition:.18s ease;
+}
+.week-pill:hover{border-color:var(--gold);color:var(--ink)}
+.week-pill.active{
+  background:var(--ink);
+  border-color:var(--ink);
+  color:var(--white);
+}
+.archive-note{
+  margin:0 0 18px;
+  padding:12px 14px;
+  background:rgba(201,135,56,.08);
+  border-left:3px solid var(--gold);
+  color:var(--muted);
+  font-size:.82rem;
+  line-height:1.55;
+}
+@media(max-width:760px){
+  .week-archive{align-items:flex-start;flex-direction:column}
+}
+
+
+/* === PERMANENT SIGNAL TAXONOMY === */
+.taxonomy{
+  margin:0 0 24px;
+  padding:18px;
+  background:var(--light);
+  border:1px solid var(--line);
+}
+.taxonomy-head{
+  display:flex;
+  justify-content:space-between;
+  gap:18px;
+  align-items:flex-end;
+  margin-bottom:14px;
+}
+.taxonomy-title{
+  font:600 1.5rem/1.2 var(--serif);
+}
+.taxonomy-sub{
+  color:var(--muted);
+  font-size:.82rem;
+  max-width:600px;
+}
+.taxonomy-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:8px;
+}
+.taxonomy-item{
+  background:#fff;
+  border:1px solid var(--line);
+  padding:11px 12px;
+}
+.taxonomy-item b{
+  display:block;
+  font-size:.82rem;
+  margin-bottom:3px;
+}
+.taxonomy-item span{
+  display:block;
+  color:var(--muted);
+  font-size:.7rem;
+  line-height:1.4;
+}
+@media(max-width:900px){.taxonomy-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.taxonomy-grid{grid-template-columns:1fr}.taxonomy-head{align-items:flex-start;flex-direction:column}}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div>
+    <div class="brand-lockup">
+      <svg class="brand-mark" viewBox="0 0 120 120" aria-hidden="true"><rect width="120" height="120" rx="24" fill="#29241f"></rect><rect x="14" y="76" width="92" height="22" rx="6" fill="#756a5f"></rect><text x="60" y="94" font-family="Georgia" font-size="18" font-weight="700" fill="#f5f0e8" text-anchor="middle">P</text><rect x="22" y="50" width="76" height="22" rx="6" fill="#aaa092"></rect><text x="60" y="68" font-family="Georgia" font-size="18" font-weight="700" fill="#f5f0e8" text-anchor="middle">T</text><rect x="30" y="24" width="60" height="22" rx="6" fill="#c98738"></rect><text x="60" y="42" font-family="Georgia" font-size="18" font-weight="700" fill="#fff" text-anchor="middle">B</text><rect x="56" y="6" width="6" height="14" rx="3" fill="#d85a2a"></rect></svg>
+      <div class="brand-meta">
+        <div class="brand-name">Before <em>the</em> Prompt</div>
+        <div class="brand-kicker">Enterprise AI Signals</div>
+        <div class="brand-url">beforetheprompt.org</div>
+      </div>
+    </div>
+    <h1>What’s Changing in Enterprise AI</h1>
+    <div class="sub">A weekly view of how enterprise AI is changing across adoption, governance, data foundations, frontier models, agents, economics, risk and evaluation.</div>
+  </div>
+  <div class="weekbox">
+    <div class="weeklabel" id="activeWeekLabel">Week of Sep 3–9, 2026</div>
+    <a class="linkedin-cta" href="https://www.linkedin.com/company/before-the-prompt/" target="_blank" rel="noopener">Follow Before the Prompt for updates</a>
+  </div>
+</header>
+
+<div class="tabs">
+<button class="tab active" data-tab="highlights">Weekly Highlights</button>
+<button class="tab" data-tab="explore">Explore Signals</button>
+</div>
+
+<div class="taxonomy">
+  <div class="taxonomy-head">
+    <div class="taxonomy-title">Coverage domains</div>
+    <div class="taxonomy-sub">These eight domains stay consistent week to week. The signals inside them change as enterprise AI adoption and governance evolve.</div>
+  </div>
+  <div class="taxonomy-grid">
+    <div class="taxonomy-item"><b>Enterprise AI Adoption</b><span>Production use, ROI, workflow redesign, scaling</span></div>
+    <div class="taxonomy-item"><b>AI Governance &amp; Responsible AI</b><span>Controls, regulation, accountability, auditability</span></div>
+    <div class="taxonomy-item"><b>Data Foundations</b><span>Data quality, lineage, semantics, metadata, data products</span></div>
+    <div class="taxonomy-item"><b>Frontier Model Adoption</b><span>OpenAI, Claude, Gemini, Copilot, Llama, open-weight models, routing</span></div>
+    <div class="taxonomy-item"><b>Agentic AI &amp; Runtime Governance</b><span>Agents, permissions, identity, tool access, monitoring</span></div>
+    <div class="taxonomy-item"><b>AI Economics &amp; Optimization</b><span>Tokens, inference cost, caching, routing, AI FinOps</span></div>
+    <div class="taxonomy-item"><b>AI Risk &amp; Security</b><span>Prompt injection, shadow AI, access control, model and agent risk</span></div>
+    <div class="taxonomy-item"><b>Evaluation &amp; Research</b><span>Evals, benchmarking, prompt quality, model performance</span></div>
+  </div>
+</div>
+
+<div class="week-archive" aria-label="Weekly archive">
+  <div class="week-archive-label">Explore 3 editions</div>
+  <div class="week-pills" id="weekPills"><button class="week-pill active" data-week="2026-09-03_2026-09-09">Sep 3–9</button><button class="week-pill " data-week="2026-08-27_2026-09-02">Aug 27–Sep 2</button><button class="week-pill " data-week="2026-08-20_2026-08-26">Aug 20–26</button></div>
+</div>
+<div class="archive-note" id="archiveNote">
+  Select a week to compare how the eight Enterprise AI Signals domains are shifting over time. Each selection updates the highlights and public signals. Archive dates reflect the original editions; coverage is not continuous.
+</div>
+
+<section id="highlights" class="section active">
+<div class="summary">
+  <div class="label">Executive synthesis</div>
+  <h2>This week is less about one breakthrough—and more about several enterprise AI patterns converging.</h2>
+  <p id="execSummary">Enterprise AI signals this week point toward a more managed operating model: governance is moving into infrastructure and the SDLC, agents are forcing new identity and control questions, and model economics are becoming part of architecture decisions.</p>
+</div>
+
+<div class="summary"><div class="label">Change from prior editions</div><p id="comparison"></p></div>
+<div class="trend-grid" id="trendGrid">
+      <div class="trend-card">
+        <div class="eyebrow">Weekly Trend 1</div>
+        <h3>Data Foundations</h3>
+        <p>3 signals this week point to governance is moving from a review gate to an embedded operating capability spanning data, models, software delivery and risk.</p>
+        <p class="why">A concrete named-company example of governance-by-design rather than governance-after-deployment.</p>
+        <div class="sources">Signals behind this trend: LPL Financial · Deloitte / enterprise agents · Blue Yonder</div>
+      </div>
+      <div class="trend-card">
+        <div class="eyebrow">Weekly Trend 2</div>
+        <h3>Agentic AI &amp; Runtime Governance</h3>
+        <p>1 signal this week point to agents execute tasks, call APIs and make decisions, so traditional model controls do not cover the full action surface.</p>
+        <p class="why">Enterprise governance must extend from model risk to identity, permissions, tools, runtime monitoring and action boundaries.</p>
+        <div class="sources">Signals behind this trend: CDO Magazine</div>
+      </div>
+      <div class="trend-card">
+        <div class="eyebrow">Weekly Trend 3</div>
+        <h3>AI Economics &amp; Optimization</h3>
+        <p>1 signal this week point to aI productivity depends on deployment choices and worker context, not merely giving employees access to models.</p>
+        <p class="why">Enterprise adoption metrics should capture who benefits, under what conditions and how work changes — not simply active users or tokens consumed.</p>
+        <div class="sources">Signals behind this trend: MIT</div>
+      </div></div>
+
+<div class="connect">
+  <div class="label">Connect the dots</div>
+  <h3 id="connectText">Governance, model portfolios, agent controls and enterprise data foundations are increasingly converging into one operating question: how do you run AI as a managed enterprise system rather than a collection of disconnected pilots?</h3>
+</div>
+
+<div class="glossary">
+  <div class="label">New terminology to know</div>
+  <div class="gloss-grid" id="glossGrid">
+    <div class="term"><b>Model Routing</b><span>Automatically choosing which AI model should handle a task based on factors such as quality, cost, latency or risk.</span></div>
+    <div class="term"><b>Open-Weight Model</b><span>A model whose trained weights are available for organizations to run, adapt or fine-tune themselves.</span></div>
+    <div class="term"><b>AI FinOps</b><span>Managing AI consumption and cost using metrics such as token usage, inference cost, caching and cost-per-task.</span></div>
+    <div class="term"><b>Context Engineering</b><span>Designing the information, memory, retrieval and instructions supplied to an AI system so it performs reliably and efficiently.</span></div>
+    <div class="term"><b>Agentic AI</b><span>AI systems that can plan, use tools and take actions across multiple steps rather than only generate a response.</span></div>
+    <div class="term"><b>Runtime Governance</b><span>Controls applied while an AI system is actually operating—such as permissions, monitoring, policy checks, logging and escalation.</span></div></div>
+</div>
+<div class="question">
+  <div class="label">One question for leaders</div>
+  <p id="leaderQuestion">Where is your organization least prepared today: model choice, trusted data, agent controls, or operating ownership?</p>
+</div>
+</section>
+
+<section id="explore" class="section">
+<div class="toolbar"><div class="filterbox"><label for="theme">Domain</label><select id="theme"><option value="">All Domains</option><option value="Enterprise AI Adoption">Enterprise AI Adoption</option><option value="AI Governance &amp; Responsible AI">AI Governance &amp; Responsible AI</option><option value="Data Foundations">Data Foundations</option><option value="Frontier Model Adoption">Frontier Model Adoption</option><option value="Agentic AI &amp; Runtime Governance">Agentic AI &amp; Runtime Governance</option><option value="AI Economics &amp; Optimization">AI Economics &amp; Optimization</option><option value="AI Risk &amp; Security">AI Risk &amp; Security</option><option value="Evaluation &amp; Research">Evaluation &amp; Research</option></select></div><div class="count" id="count">9 signals · Sep 3–9</div></div>
+<div id="signals" class="signal-list">
+    <article class="signal" data-id="0">
+      <div class="tags"><span class="tag">Data Foundations</span><span class="tag">LPL Financial</span></div>
+      <h3>LPL Financial builds AI governance into infrastructure, SDLC and risk processes</h3>
+      <div class="why">Governance is moving from a review gate to an embedded operating capability spanning data, models, software delivery and risk.</div>
+      <div class="bottom"><span>CDO Magazine · 2026-09-08</span><span class="open">Read signal →</span></div>
+    </article>
+    <article class="signal" data-id="1">
+      <div class="tags"><span class="tag">Agentic AI &amp; Runtime Governance</span><span class="tag">—</span></div>
+      <h3>Agentic AI needs a different security and control playbook</h3>
+      <div class="why">Agents execute tasks, call APIs and make decisions, so traditional model controls do not cover the full action surface.</div>
+      <div class="bottom"><span>CDO Magazine · 2026-09-08</span><span class="open">Read signal →</span></div>
+    </article>
+    <article class="signal" data-id="2">
+      <div class="tags"><span class="tag">Data Foundations</span><span class="tag">Deloitte / enterprise agents</span></div>
+      <h3>Who owns the agent when it acts on enterprise data?</h3>
+      <div class="why">Autonomous agents break the old governance assumption that every data action maps cleanly to a human actor.</div>
+      <div class="bottom"><span>CDO Magazine · 2026-09-03</span><span class="open">Read signal →</span></div>
+    </article>
+    <article class="signal" data-id="3">
+      <div class="tags"><span class="tag">Data Foundations</span><span class="tag">Blue Yonder</span></div>
+      <h3>Enterprise knowledge lives outside the data — and AI can't infer all of it</h3>
+      <div class="why">Correct data can still be insufficient when business rules, exceptions and judgment are undocumented.</div>
+      <div class="bottom"><span>CDO Magazine · 2026-09-08</span><span class="open">Read signal →</span></div>
+    </article>
+    <article class="signal" data-id="7">
+      <div class="tags"><span class="tag">AI Economics &amp; Optimization</span><span class="tag">MIT</span></div>
+      <h3>MIT identifies 10 levers that determine whether GenAI improves worker performance</h3>
+      <div class="why">AI productivity depends on deployment choices and worker context, not merely giving employees access to models.</div>
+      <div class="bottom"><span>MIT Sloan · 2026-09-03</span><span class="open">Read signal →</span></div>
+    </article>
+    <article class="signal" data-id="10">
+      <div class="tags"><span class="tag">AI Governance &amp; Responsible AI</span><span class="tag">ISO / EU AI Act ecosystem</span></div>
+      <h3>AI governance standards are fragmenting faster than they are converging</h3>
+      <div class="why">Organizations can mistakenly treat certification against one framework as proof of compliance with another, creating governance blind spots.</div>
+      <div class="bottom"><span>Cloud Security Alliance · 2026-09-08</span><span class="open">Read signal →</span></div>
+    </article>
+    <article class="signal" data-id="11">
+      <div class="tags"><span class="tag">AI Risk &amp; Security</span><span class="tag">OWASP ecosystem</span></div>
+      <h3>OWASP's 2026 list elevates Excessive Agency as an LLM risk</h3>
+      <div class="why">The threat model is expanding from prompt leakage to agent autonomy, memory, retrieved documents, tool responses and application state.</div>
+      <div class="bottom"><span>Cloud Security Alliance · 2026-09-04</span><span class="open">Read signal →</span></div>
+    </article>
+    <article class="signal" data-id="18">
+      <div class="tags"><span class="tag">Frontier Model Adoption</span><span class="tag">Cross-industry enterprises</span></div>
+      <h3>Open-weight models become part of the enterprise AI stack</h3>
+      <div class="why">Rising proprietary-model costs and sovereignty concerns are pushing enterprises toward open-weight alternatives, but operating cost and governance still matter.</div>
+      <div class="bottom"><span>Gartner · 2026-09-03</span><span class="open">Read signal →</span></div>
+    </article>
+    <article class="signal" data-id="26">
+      <div class="tags"><span class="tag">Enterprise AI Adoption</span><span class="tag">Google Cloud &amp; Accenture</span></div>
+      <h3>Google Cloud and Accenture put AI engineers on-site to accelerate enterprise deployment</h3>
+      <div class="why">Persistent integration and workflow-redesign challenges are pushing AI vendors toward hands-on implementation models rather than pure software delivery.</div>
+      <div class="bottom"><span>Wall Street Journal · 2026-09-08</span><span class="open">Read signal →</span></div>
+    </article></div>
+</section>
+
+<footer class="site-footer"><span>© 2026 Before the Prompt™</span><span>Grounded conversations. Real insights.</span><a href="https://beforetheprompt.org/" target="_blank" rel="noopener">beforetheprompt.org</a></footer>
+
+</div>
+
+<div id="modal" class="modal"><div class="drawer"><button class="close" id="close">×</button><div class="eyebrow" id="dm"></div><h2 id="dt"></h2><div class="meta" id="dc"></div><div class="block"><h4>What happened</h4><p id="ds"></p></div><div class="block"><h4>Why it matters</h4><p id="dw"></p></div><div class="block"><h4>Enterprise implication</h4><p id="di"></p></div><div class="block"><h4>Discussion hook</h4><p id="dh"></p></div><div class="links" id="links"></div></div></div>
+
+<script>
+const DOMAINS=[
+  "Enterprise AI Adoption",
+  "AI Governance & Responsible AI",
+  "Data Foundations",
+  "Frontier Model Adoption",
+  "Agentic AI & Runtime Governance",
+  "AI Economics & Optimization",
+  "AI Risk & Security",
+  "Evaluation & Research"
+];
+
+function classifyDomain(x){
+  const h=(x.Headline||"").toLowerCase();
+  const s=((x["Sub-theme"]||"")+" "+(x.Summary||"")+" "+(x.Why||"")+" "+(x.Implication||"")).toLowerCase();
+  const all=h+" "+s;
+
+  if(x.Headline==="Enterprise knowledge lives outside the data — and AI can't infer all of it") return "Data Foundations";
+  if(x.Headline==="Open-weight models become part of the enterprise AI stack") return "Frontier Model Adoption";
+  if(x.Headline==="Accenture builds enterprise services around hybrid open-weight and proprietary model portfolios") return "Frontier Model Adoption";
+  if(x.Headline==="AT&T uses model routing and open models to attack AI token costs") return "AI Economics & Optimization";
+  if(x.Headline==="Uber holds AI spending flat while agent usage surges") return "AI Economics & Optimization";
+
+  if(all.includes("semantic") || all.includes("lineage") || all.includes("metadata") || all.includes("data quality") || all.includes("knowledge graph"))
+    return "Data Foundations";
+
+  if(all.includes("open-weight") || all.includes("open weight") || all.includes("multi-model") || all.includes("frontier model") || all.includes("model portfolio"))
+    return "Frontier Model Adoption";
+
+  if(all.includes("token") || all.includes("inference cost") || all.includes("finops") || all.includes("cost optimization") || all.includes("caching"))
+    return "AI Economics & Optimization";
+
+  if(all.includes("prompt injection") || all.includes("excessive agency") || all.includes("hidden context") || all.includes("cybersecurity") || all.includes("security risk"))
+    return "AI Risk & Security";
+
+  if(all.includes("tevv") || all.includes("benchmark") || all.includes("evaluation criteria") || all.includes("trustworthiness criteria") || x.Theme==="AI Evaluation")
+    return "Evaluation & Research";
+
+  if(all.includes("agent identity") || all.includes("decision rights") || all.includes("autonomous agent") || all.includes("agentic") || h.includes("agent"))
+    return "Agentic AI & Runtime Governance";
+
+  if(x.Theme==="AI Governance Trends" || x.Theme==="Responsible AI" || all.includes("privacy governance") || all.includes("standards"))
+    return "AI Governance & Responsible AI";
+
+  return "Enterprise AI Adoption";
+}
+
+const WEEKS=[
+{"id": "2026-09-14_2026-09-20", "label": "Sep 14–20", "fullLabel": "Week of Sep 14–20, 2026", "start": "2026-09-14", "end": "2026-09-20", "synthesis": "This week’s selected announcements bring enterprise AI closer to the systems that run work: specialized models, governed access to business context, and visibility into agent cost and security. The evidence shows a shift in product and service offerings; it does not yet establish broad adoption or realized returns.", "connect": "The emerging management task is to evaluate the whole workflow: the model, the context it sees, the actions it can take, the cost of completion and the person accountable when it fails.", "question": "For your next agent deployment, can you name the workflow owner, permitted actions, success threshold and cost per successful outcome?"},
+  {
+    id:"2026-09-03_2026-09-09",
+    label:"Sep 3–9",
+    fullLabel:"Week of Sep 3–9, 2026",
+    start:"2026-09-03",
+    end:"2026-09-09",
+    synthesis:"Enterprise AI signals this week point toward a more managed operating model: governance is moving into infrastructure and the SDLC, agents are forcing new identity and control questions, and model economics are becoming part of architecture decisions.",
+    connect:"Governance, model portfolios, agent controls and enterprise data foundations are increasingly converging into one operating question: how do you run AI as a managed enterprise system rather than a collection of disconnected pilots?",
+    question:"Where is your organization least prepared today: model choice, trusted data, agent controls, or operating ownership?"
+  },
+  {
+    id:"2026-08-27_2026-09-02",
+    label:"Aug 27–Sep 2",
+    fullLabel:"Week of Aug 27–Sep 2, 2026",
+    start:"2026-08-27",
+    end:"2026-09-02",
+    synthesis:"The strongest signals this week were about scaling discipline. Enterprise AI spending and access continued to grow, but adoption depth, management ownership, privacy governance and cost control remained the harder problems.",
+    connect:"The pattern is shifting from access to operating readiness: enterprises increasingly need governance, workflow redesign, cost controls and clear decision rights before AI can scale reliably.",
+    question:"Are you measuring AI adoption by access and usage—or by process integration, business outcomes and governance maturity?"
+  }
+];
+
+let activeWeek=WEEKS[0];
+
+const DATA=[{"Date": "2026-09-17", "Headline": "HCLTech packages AI transformation for midmarket enterprises", "Theme": "Enterprise AI Adoption", "PrimaryDomain": "Enterprise AI Adoption", "Company": "HCLTech", "Source": "HCLTech announcement", "Summary": "HCLTech launched Pulse for enterprises with $500 million–$5 billion in annual revenue, combining strategy, data, cyber, implementation and operations. This is a services launch, not evidence of realized client returns.", "Why": "Execution capacity remains part of the adoption problem.", "Implication": "Ask implementation partners to commit to workflow outcomes and accountable operating ownership.", "Hook": "Leadership action: Ask implementation partners to commit to workflow outcomes and accountable operating ownership.", "Primary": "https://www.hcltech.com/press-releases/hcltech-launches-hcltech-pulse-accelerate-ai-led-transformation-fast-scaling", "Coverage": "", "Industry": "Cross-industry", "Sub-theme": "Weekly evidence"}, {"Date": "2026-09-14", "Headline": "Research finds gaps between governance coverage and sector vulnerability", "Theme": "AI Governance & Responsible AI", "PrimaryDomain": "AI Governance & Responsible AI", "Company": "Hung et al.", "Source": "arXiv preprint", "Summary": "The authors compare 684 federal AI governance documents with vulnerability assessments from 272 experts. They identify uneven coverage across sectors and risks. This is research about coverage, not a new legal requirement.", "Why": "Policy volume alone does not demonstrate that material risks are addressed.", "Implication": "Map controls to your sector and use cases, including multi-agent risks; validate the study before generalizing.", "Hook": "Leadership action: Map controls to your sector and use cases, including multi-agent risks; validate the study before generalizing.", "Primary": "https://arxiv.org/abs/2609.16260", "Coverage": "", "Industry": "Cross-industry", "Sub-theme": "Weekly evidence"}, {"Date": "2026-09-15", "Headline": "Splunk extends access to distributed operational context", "Theme": "Data Foundations", "PrimaryDomain": "Data Foundations", "Company": "Cisco / Splunk", "Source": "Splunk product announcement", "Summary": "Splunk announced Federated Search extensions to AWS CloudWatch Lake and Databricks, alongside MCP-enabled Catalog Discovery. Its stated aim is to make distributed machine data easier for people and agents to find and analyze.", "Why": "Discovery and business context matter alongside data quality.", "Implication": "Test permissions, freshness and traceability across federated sources before allowing agents to act.", "Hook": "Leadership action: Test permissions, freshness and traceability across federated sources before allowing agents to act.", "Primary": "https://www.splunk.com/en_us/blog/platform/the-agentic-era-demands-a-new-data-foundation-how-cisco-is-delivering-it-with-splunk.html", "Coverage": "", "Industry": "Cross-industry", "Sub-theme": "Weekly evidence"}, {"Date": "2026-09-15", "Headline": "Koa brings specialized model choice into CRM workflows", "Theme": "Frontier Model Adoption", "PrimaryDomain": "Frontier Model Adoption", "Company": "Salesforce / NVIDIA", "Source": "Salesforce announcement", "Summary": "Salesforce announced Koa, built on NVIDIA Nemotron, for CRM reasoning and tool use. Select customer pilots are available; U.S. general availability is expected in winter 2026. Vendor benchmark claims are not independent validation.", "Why": "Model selection is becoming specific to the workflow and deployment boundary.", "Implication": "Compare specialized and general models on your own tasks, error costs and operating requirements.", "Hook": "Leadership action: Compare specialized and general models on your own tasks, error costs and operating requirements.", "Primary": "https://www.salesforce.com/news/press-releases/2026/09/15/koa-reasoning-model/", "Coverage": "", "Industry": "Cross-industry", "Sub-theme": "Weekly evidence"}, {"Date": "2026-09-16", "Headline": "AIforce exposes Salesforce context to agent interfaces", "Theme": "Agentic AI & Runtime Governance", "PrimaryDomain": "Agentic AI & Runtime Governance", "Company": "Salesforce", "Source": "Salesforce regional announcement", "Summary": "Salesforce announced AIforce to expose business context, workflows and permissions through AI interfaces. Salesforce in Claude is described as available in beta. Product availability varies by region and agreement.", "Why": "An agent interface needs the rules of the business as well as access to its records.", "Implication": "Pilot a bounded workflow and verify inherited permissions, action logs and escalation paths.", "Hook": "Leadership action: Pilot a bounded workflow and verify inherited permissions, action logs and escalation paths.", "Primary": "https://www.salesforce.com/ap/news/press-releases/2026/09/16/sg-salesforce-unveils-aiforce-bringing-the-full-power-of-its-platform-to-any-interface/", "Coverage": "", "Industry": "Cross-industry", "Sub-theme": "Weekly evidence"}, {"Date": "2026-09-15", "Headline": "Splunk connects agent observability with token spending", "Theme": "AI Economics & Optimization", "PrimaryDomain": "AI Economics & Optimization", "Company": "Cisco / Splunk", "Source": "Cisco announcement", "Summary": "Cisco announced Tokenomics capabilities for attributing AI token expenditure and forecasting consumption within Splunk Agent Observability. The announcement describes product capabilities; it does not establish customer savings.", "Why": "Usage telemetry can support accountability for AI spending.", "Implication": "Measure cost per successfully completed task, including retries and human review, before expanding autonomy.", "Hook": "Leadership action: Measure cost per successfully completed task, including retries and human review, before expanding autonomy.", "Primary": "https://newsroom.cisco.com/c/r/newsroom/en/us/a/y2026/m09/cisco-delivers-trusted-ai-at-scale-through-new-splunk-advancements.html", "Coverage": "", "Industry": "Cross-industry", "Sub-theme": "Weekly evidence"}, {"Date": "2026-09-14", "Headline": "HCLTech and CrowdStrike join AI security with governance services", "Theme": "AI Risk & Security", "PrimaryDomain": "AI Risk & Security", "Company": "HCLTech / CrowdStrike", "Source": "HCLTech announcement", "Summary": "The companies announced integration of Falcon Guardian with HCLTech AI security, governance and managed services, covering applications, models, agents, identities and data. Independent effectiveness results were not provided.", "Why": "AI security is becoming an operating responsibility across several control surfaces.", "Implication": "Assign incident ownership and test detection and response against your actual agent workflows.", "Hook": "Leadership action: Assign incident ownership and test detection and response against your actual agent workflows.", "Primary": "https://www.hcltech.com/press-releases/hcltech-and-crowdstrike-expand-strategic-partnership-advance-ai-security-and", "Coverage": "", "Industry": "Cross-industry", "Sub-theme": "Weekly evidence"}, {"Date": "2026-09-14", "Headline": "Koa research tests specialization for multi-turn tool use", "Theme": "Evaluation & Research", "PrimaryDomain": "Evaluation & Research", "Company": "Salesforce researchers", "Source": "arXiv preprint", "Summary": "The Koa paper describes workflow simulation and reinforcement learning for tool use. Authors report gains over the base model while remaining below the strongest frontier models. This is a vendor-authored preprint, not independent replication.", "Why": "Task-specific improvement is different from broad model superiority.", "Implication": "Evaluate complete workflows, failed actions and recovery behavior, not just answer quality.", "Hook": "Leadership action: Evaluate complete workflows, failed actions and recovery behavior, not just answer quality.", "Primary": "https://arxiv.org/abs/2609.15066", "Coverage": "", "Industry": "Cross-industry", "Sub-theme": "Weekly evidence"}, {"Date": "2026-09-08", "Headline": "LPL Financial builds AI governance into infrastructure, SDLC and risk processes", "Theme": "AI Governance Trends", "Sub-theme": "Governance Operating Model", "Industry": "Financial Services / Wealth Management", "Company": "LPL Financial", "Why": "Governance is moving from a review gate to an embedded operating capability spanning data, models, software delivery and risk.", "Summary": "LPL's governance blueprint includes data segregation, semantic layers, knowledge graphs, catalogs, business meaning, model management and a control plane, with governance embedded in SDLC and risk assessment.", "Implication": "A concrete named-company example of governance-by-design rather than governance-after-deployment.", "Hook": "AI governance is moving inside the SDLC — not sitting beside it.", "Primary": "https://www.cdomagazine.tech/ai-governance/beth-hiatt-on-building-ai-governance-at-lpl-financial-infrastructure-process-and-meaning", "Coverage": "", "Source": "CDO Magazine"}, {"Date": "2026-09-08", "Headline": "Agentic AI needs a different security and control playbook", "Theme": "Agentic AI", "Sub-theme": "Agent Security & Controls", "Industry": "Cross-industry", "Company": "—", "Why": "Agents execute tasks, call APIs and make decisions, so traditional model controls do not cover the full action surface.", "Summary": "The article lays out controls for identifying, authorizing, monitoring and constraining autonomous agents as they act for an organization.", "Implication": "Enterprise governance must extend from model risk to identity, permissions, tools, runtime monitoring and action boundaries.", "Hook": "The model isn't the biggest risk anymore — what the agent is allowed to DO is.", "Primary": "", "Coverage": "https://www.cdomagazine.tech/ai-governance/how-to-manage-agentic-ai-security-risk-and-control-to-protect-your-organization", "Source": "CDO Magazine"}, {"Date": "2026-09-03", "Headline": "Who owns the agent when it acts on enterprise data?", "Theme": "AI Governance Trends", "Sub-theme": "Accountability / Agent Identity", "Industry": "Cross-industry / Professional Services", "Company": "Deloitte / enterprise agents", "Why": "Autonomous agents break the old governance assumption that every data action maps cleanly to a human actor.", "Summary": "The piece uses autonomous-agent incidents to highlight ambiguity around accountability when software agents read, update or trigger actions on enterprise data.", "Implication": "Organizations need agent identity, ownership, authorization and decision/action lineage.", "Hook": "Your data lineage may end at the exact point where the AI agent begins acting.", "Primary": "", "Coverage": "https://www.cdomagazine.tech/ai-governance/who-owns-the-agent-when-it-acts-on-your-data", "Source": "CDO Magazine"}, {"Date": "2026-09-08", "Headline": "Enterprise knowledge lives outside the data — and AI can't infer all of it", "Theme": "Data Quality for AI", "Sub-theme": "Semantic Context / Quality", "Industry": "Supply Chain / Enterprise Software", "Company": "Blue Yonder", "Why": "Correct data can still be insufficient when business rules, exceptions and judgment are undocumented.", "Summary": "Blue Yonder's data leader describes how an executive metric depended on tacit adjustments and rules that were not encoded in the underlying systems.", "Implication": "AI-ready data requires business meaning, semantic context and institutional knowledge — not only technically correct records.", "Hook": "The number can be right and your AI can still be wrong — because the meaning isn't in the data.", "Primary": "", "Coverage": "https://www.cdomagazine.tech/data-management/what-ai-cant-learn-from-your-data", "Source": "CDO Magazine"}, {"Date": "2026-09-02", "Headline": "CISOs are being pulled into enterprise AI privacy governance", "Theme": "Responsible AI", "Sub-theme": "Privacy / Security Governance", "Industry": "Cross-industry", "Company": "—", "Why": "AI collapses traditional boundaries between privacy, security, vendor risk and governance, expanding the CISO's control responsibilities.", "Summary": "IAPP argues enterprise AI often enters through business use cases before a perfect governance process exists, requiring security leaders to operationalize privacy principles across controls and incidents.", "Implication": "AI governance operating models increasingly require shared decision rights across CISO, privacy, data, legal and AI governance teams.", "Hook": "The CISO's job is quietly expanding from securing systems to governing how AI uses information.", "Primary": "https://iapp.org/news/a/the-ciso-s-new-privacy-mandate-in-enterprise-ai-governance", "Coverage": "", "Source": "IAPP"}, {"Date": "2026-09-01", "Headline": "Middle managers may determine whether enterprise AI actually scales", "Theme": "Enterprise AI Adoption", "Sub-theme": "Change Management", "Industry": "Cross-industry", "Company": "—", "Why": "Executive sponsorship and tooling do not guarantee adoption; managers translate AI ambition into daily workflow behavior.", "Summary": "HBR argues that middle managers are a critical adoption layer because they determine whether AI becomes embedded in work or remains a side experiment.", "Implication": "AI transformation requires incentives, workflow redesign and manager-level ownership, not just enterprise licenses and training.", "Hook": "Boards approve AI. Middle managers decide whether anyone actually uses it.", "Primary": "https://hbr.org/2026/09/middle-managers-will-make-or-break-ai-adoption", "Coverage": "", "Source": "Harvard Business Review"}, {"Date": "2026-09-02", "Headline": "AI agents are starting to transact with other AI agents", "Theme": "Agentic AI", "Sub-theme": "AI-to-AI Commerce / Decision Rights", "Industry": "Cross-industry", "Company": "—", "Why": "AI-to-AI transactions create new questions about disclosure, authority, negotiation, permissions and accountability.", "Summary": "HBR examines commercial environments where agents increasingly interact with other agents and argues firms need rules governing what agents can see, decide and do.", "Implication": "Governance must prepare for machine-to-machine decision making where neither side of a transaction is directly human-operated.", "Hook": "The next enterprise customer may not be a person — it may be another company's AI agent.", "Primary": "", "Coverage": "https://hbr.org/2026/09/what-happens-when-ai-starts-doing-business-with-ai", "Source": "Harvard Business Review"}, {"Date": "2026-09-03", "Headline": "MIT identifies 10 levers that determine whether GenAI improves worker performance", "Theme": "Enterprise AI Adoption", "Sub-theme": "Workforce / Human-in-the-loop", "Industry": "Cross-industry / Workforce", "Company": "MIT", "Why": "AI productivity depends on deployment choices and worker context, not merely giving employees access to models.", "Summary": "MIT summarizes work showing that employers should study variation in how people use AI and design human-in-the-loop work intentionally.", "Implication": "Enterprise adoption metrics should capture who benefits, under what conditions and how work changes — not simply active users or tokens consumed.", "Hook": "AI can make work faster without making work better — MIT says the deployment design decides which one you get.", "Primary": "", "Coverage": "https://mitsloan.mit.edu/ideas-made-to-matter/10-levers-shaping-generative-ai-truly-improves-worker-performance", "Source": "MIT Sloan"}, {"Date": "2026-09-02", "Headline": "Fewer than 25% of enterprises have successfully scaled AI", "Theme": "Enterprise AI Adoption", "Sub-theme": "Scaling / ROI", "Industry": "Cross-industry", "Company": "Gartner survey respondents", "Why": "The gap between AI investment and scaled business value remains large despite continued spending plans.", "Summary": "CIO Dive reports Gartner survey data showing fewer than one-quarter of enterprises have scaled AI across multiple business units, while 85% of tech leaders plan to increase AI investment next year.", "Implication": "The enterprise problem is shifting from experimentation to portfolio discipline: success metrics, stop/go decisions, operating models and scalable governance.", "Hook": "AI spending is going up while scaled success is still below 25% — that's the gap leaders should be talking about.", "Primary": "", "Coverage": "https://www.ciodive.com/news/rising-spend-cios-AI-success/829484/", "Source": "CIO Dive"}, {"Date": "2026-09-02", "Headline": "KPMG gets an internal agentic AI tool independently certified", "Theme": "Responsible AI", "Sub-theme": "Assurance / Certification", "Industry": "Professional Services / Audit & Advisory", "Company": "KPMG", "Why": "Independent assurance could become an important trust mechanism as enterprises deploy agents that can take actions.", "Summary": "CIO Dive reports that a KPMG internal agentic tool received independent certification for security, reliability and governance controls under the AIUC-1 standard.", "Implication": "Agent assurance may evolve from internal governance checklists toward third-party testing and certification.", "Hook": "A Big Four firm just treated an AI agent more like a controlled enterprise system than a chatbot.", "Primary": "", "Coverage": "https://www.ciodive.com/news/kpmg-agentic-tool-certified-security-reliability-ai-risks-mount/829498/", "Source": "CIO Dive"}, {"Date": "2026-09-08", "Headline": "AI governance standards are fragmenting faster than they are converging", "Theme": "AI Governance Trends", "Sub-theme": "Standards / Regulation", "Industry": "Cross-industry / Regulation & Standards", "Company": "ISO / EU AI Act ecosystem", "Why": "Organizations can mistakenly treat certification against one framework as proof of compliance with another, creating governance blind spots.", "Summary": "CSA notes a proliferation of AI security/governance initiatives and warns against assuming ISO/IEC 42001 certification automatically implies EU AI Act readiness.", "Implication": "Governance teams need a control-mapping layer across standards rather than collecting certifications independently.", "Hook": "AI governance has a new problem: too many standards can create the illusion of control.", "Primary": "https://labs.cloudsecurityalliance.org/research/csa-research-note-ai-governance-fragmentation-20260908-csa-s/", "Coverage": "", "Source": "Cloud Security Alliance"}, {"Date": "2026-09-04", "Headline": "OWASP's 2026 list elevates Excessive Agency as an LLM risk", "Theme": "AI Risk & Security", "Sub-theme": "Excessive Agency / Hidden Context", "Industry": "Cross-industry / Cybersecurity", "Company": "OWASP ecosystem", "Why": "The threat model is expanding from prompt leakage to agent autonomy, memory, retrieved documents, tool responses and application state.", "Summary": "CSA summarizes OWASP's 2026 GenAI Top 10, where Excessive Agency rises and Hidden Context Exposure broadens confidentiality concerns beyond the system prompt.", "Implication": "Agent security controls should cover context, memory, tools and permissions — not only prompt injection.", "Hook": "Prompt injection isn't disappearing; the attack surface is getting much bigger than the prompt.", "Primary": "https://labs.cloudsecurityalliance.org/research/csa-research-note-owasp-genai-top10-2026-agent-control-stand/", "Coverage": "", "Source": "Cloud Security Alliance"}, {"Date": "2026-09-02", "Headline": "Standards bodies are racing to define how AI agents are discovered and identified", "Theme": "Agentic AI", "Sub-theme": "Agent Identity / Standards", "Industry": "Cross-industry / Internet Standards", "Company": "IETF", "Why": "Stable agent identity is foundational for authorization, auditability and trust across organizational boundaries.", "Summary": "CSA reviews IETF work on DAWN and notes that discovery is progressing while deeper identity and authorization questions remain unresolved.", "Implication": "Enterprise IAM architecture may eventually need first-class identities for non-human AI agents.", "Hook": "We spent decades solving human identity. Now the standards race for AI identity has started.", "Primary": "https://labs.cloudsecurityalliance.org/research/csa-research-note-ietf-agent-identity-standards-20260902-csa/", "Coverage": "", "Source": "Cloud Security Alliance"}, {"Date": "2026-09-03", "Headline": "Open-weight models become part of the enterprise AI stack", "Theme": "Enterprise AI Adoption", "Sub-theme": "Open-weight Models / Model Economics", "Industry": "Cross-industry", "Company": "Cross-industry enterprises", "Why": "Rising proprietary-model costs and sovereignty concerns are pushing enterprises toward open-weight alternatives, but operating cost and governance still matter.", "Summary": "Gartner argues open-weight models should be part of the enterprise AI stack and provides a framework for deciding where they offer cost efficiency, control and innovation.", "Implication": "Enterprise architecture is moving toward portfolios of models selected by workload economics, control requirements and risk—not one default frontier model.", "Hook": "Open weights are no longer the cheap alternative — Gartner says they need to be part of the enterprise AI stack.", "Primary": "https://www.gartner.com/en/documents/8343517", "Coverage": "", "Source": "Gartner"}, {"Date": "2026-08-27", "Headline": "Uber holds AI spending flat while agent usage surges", "Theme": "Enterprise AI Adoption", "Sub-theme": "AI FinOps / Model Routing", "Industry": "Technology / Mobility", "Company": "Uber", "Why": "Uber illustrates how enterprises can scale agent usage without allowing token costs to scale linearly.", "Summary": "Axios reports weekly agent requests at Uber rose 9.4x since February while overall AI spending stayed roughly flat since April, using model routing, token caps, caching and experimentation with open-weight models.", "Implication": "Enterprise AI ROI increasingly depends on engineering the economics of inference and agent usage, not simply negotiating API prices.", "Hook": "Uber's AI usage exploded — but its AI bill didn't. That's what mature enterprise adoption starts to look like.", "Primary": "", "Coverage": "https://www.axios.com/2026/08/27/ai-uber-spending", "Source": "Axios"}, {"Date": "2026-09-08", "Headline": "Google Cloud and Accenture put AI engineers on-site to accelerate enterprise deployment", "Theme": "Enterprise AI Adoption", "Sub-theme": "Forward-Deployed Engineering / Implementation", "Industry": "Professional Services / Cloud / Cross-industry", "Company": "Google Cloud & Accenture", "Why": "Persistent integration and workflow-redesign challenges are pushing AI vendors toward hands-on implementation models rather than pure software delivery.", "Summary": "WSJ reports Google Cloud and Accenture launched a Gemini Enterprise group that will train up to 1,000 forward-deployed engineers to work directly with customers on implementation and workflow redesign.", "Implication": "Enterprise AI adoption is becoming services-intensive; deployment expertise and process redesign may be as important as model capability.", "Hook": "If AI software alone were enough, vendors wouldn't be sending engineers into customers' offices.", "Primary": "", "Coverage": "https://www.wsj.com/cio-journal/google-cloud-accenture-launch-unit-to-put-ai-engineers-on-site-with-customers-698a8628", "Source": "Wall Street Journal"}, {"Date": "2026-09-02", "Headline": "CISO responsibilities expand as enterprise AI adoption outpaces governance design", "Theme": "Responsible AI", "Sub-theme": "Privacy / Security Governance", "Industry": "Cross-industry", "Company": "Enterprise CISOs", "Why": "Business-led AI adoption often arrives before governance is fully designed, forcing security and privacy leaders to operationalize controls in real time.", "Summary": "IAPP argues CISOs increasingly need to translate privacy principles into enforceable controls spanning AI governance, vendor oversight and incident response.", "Implication": "AI adoption is changing governance ownership and decision rights across security, privacy, data and business teams.", "Hook": "Enterprise AI is expanding the CISO's job faster than most org charts are changing.", "Primary": "https://iapp.org/news/a/the-ciso-s-new-privacy-mandate-in-enterprise-ai-governance", "Coverage": "", "Source": "IAPP"}];
+DATA.forEach(x=>x.PrimaryDomain=x.PrimaryDomain||classifyDomain(x))
+const TRENDS=[{"title": "From One Model to Model Portfolios", "keywords": ["open-weight", "model routing", "multi-model", "frontier", "token", "fine-tuned", "open models", "model economics"], "summary": "Enterprises are moving away from a one-model-fits-all approach. The emerging pattern is to match models to workloads based on capability, cost, latency, sovereignty and risk—then govern that portfolio as an operating system rather than a procurement choice.", "why": "This changes architecture, vendor strategy and governance. Model selection becomes dynamic, and AI cost control increasingly depends on routing, caching and workload-specific model choices.", "stories": [{"Date": "2026-09-03", "Headline": "Open-weight models become part of the enterprise AI stack", "Theme": "Enterprise AI Adoption", "Sub-theme": "Open-weight Models / Model Economics", "Industry": "Cross-industry", "Company": "Cross-industry enterprises", "Why": "Rising proprietary-model costs and sovereignty concerns are pushing enterprises toward open-weight alternatives, but operating cost and governance still matter.", "Summary": "Gartner argues open-weight models should be part of the enterprise AI stack and provides a framework for deciding where they offer cost efficiency, control and innovation.", "Implication": "Enterprise architecture is moving toward portfolios of models selected by workload economics, control requirements and risk—not one default frontier model.", "Hook": "Open weights are no longer the cheap alternative — Gartner says they need to be part of the enterprise AI stack.", "Primary": "https://www.gartner.com/en/documents/8343517", "Coverage": "", "Source": "Gartner"}, {"Date": "2026-08-26", "Headline": "Accenture builds enterprise services around hybrid open-weight and proprietary model portfolios", "Theme": "Enterprise AI Adoption", "Sub-theme": "Multi-model Strategy / Open-weight", "Industry": "Professional Services / Cross-industry", "Company": "Accenture", "Why": "Enterprises are starting to match different models to different workloads to optimize economics, performance, sovereignty and control.", "Summary": "Accenture says open-weight models are becoming credible enterprise options and is building lifecycle services for selection, tuning, evaluation, serving, governance and operations across open and proprietary models.", "Implication": "Model routing and portfolio governance are emerging as core enterprise AI capabilities.", "Hook": "The enterprise AI question is changing from 'Which model?' to 'Which model for which workload?'", "Primary": "https://newsroom.accenture.com/blogs/2026/accenture-helps-organizations-unlock-greater-ai-choice-and-control-with-open-weight-models", "Coverage": "", "Source": "Accenture"}, {"Date": "2026-08", "Headline": "AT&T uses model routing and open models to attack AI token costs", "Theme": "Enterprise AI Adoption", "Sub-theme": "AI Cost Optimization / Routing", "Industry": "Telecommunications", "Company": "AT&T", "Why": "As AI usage scales, token economics can become a material operating constraint; routing can preserve performance while reducing cost.", "Summary": "AT&T describes production use of a cache-aware router that selects cost-effective models and increased use of open models trained for telco-specific tasks.", "Implication": "FinOps for AI is becoming architecture: model routing, caching and workload-specific models can be as important as model capability.", "Hook": "AI cost optimization is becoming an architecture decision, not a procurement negotiation.", "Primary": "https://about.att.com/blogs/2026/the-tokenomics-equation.html", "Coverage": "", "Source": "AT&T"}, {"Date": "2026-09-03", "Headline": "MIT identifies 10 levers that determine whether GenAI improves worker performance", "Theme": "Enterprise AI Adoption", "Sub-theme": "Workforce / Human-in-the-loop", "Industry": "Cross-industry / Workforce", "Company": "MIT", "Why": "AI productivity depends on deployment choices and worker context, not merely giving employees access to models.", "Summary": "MIT summarizes work showing that employers should study variation in how people use AI and design human-in-the-loop work intentionally.", "Implication": "Enterprise adoption metrics should capture who benefits, under what conditions and how work changes — not simply active users or tokens consumed.", "Hook": "AI can make work faster without making work better — MIT says the deployment design decides which one you get.", "Primary": "", "Coverage": "https://mitsloan.mit.edu/ideas-made-to-matter/10-levers-shaping-generative-ai-truly-improves-worker-performance", "Source": "MIT Sloan"}]}, {"title": "AI FinOps Is Becoming a Real Operating Discipline", "keywords": ["cost", "token", "spend", "finops", "inference", "usage", "economics", "routing"], "summary": "As AI usage scales, token and inference economics are becoming management issues. Enterprises are starting to think about cost-per-task, cached context, model routing, usage controls and workload efficiency in the same way cloud teams learned to manage compute spend.", "why": "The important shift is from 'What does the model cost?' to 'What does this business outcome cost across prompts, context, tools and agents?'", "stories": [{"Date": "2026-09-03", "Headline": "Open-weight models become part of the enterprise AI stack", "Theme": "Enterprise AI Adoption", "Sub-theme": "Open-weight Models / Model Economics", "Industry": "Cross-industry", "Company": "Cross-industry enterprises", "Why": "Rising proprietary-model costs and sovereignty concerns are pushing enterprises toward open-weight alternatives, but operating cost and governance still matter.", "Summary": "Gartner argues open-weight models should be part of the enterprise AI stack and provides a framework for deciding where they offer cost efficiency, control and innovation.", "Implication": "Enterprise architecture is moving toward portfolios of models selected by workload economics, control requirements and risk—not one default frontier model.", "Hook": "Open weights are no longer the cheap alternative — Gartner says they need to be part of the enterprise AI stack.", "Primary": "https://www.gartner.com/en/documents/8343517", "Coverage": "", "Source": "Gartner"}, {"Date": "2026-08-26", "Headline": "Accenture builds enterprise services around hybrid open-weight and proprietary model portfolios", "Theme": "Enterprise AI Adoption", "Sub-theme": "Multi-model Strategy / Open-weight", "Industry": "Professional Services / Cross-industry", "Company": "Accenture", "Why": "Enterprises are starting to match different models to different workloads to optimize economics, performance, sovereignty and control.", "Summary": "Accenture says open-weight models are becoming credible enterprise options and is building lifecycle services for selection, tuning, evaluation, serving, governance and operations across open and proprietary models.", "Implication": "Model routing and portfolio governance are emerging as core enterprise AI capabilities.", "Hook": "The enterprise AI question is changing from 'Which model?' to 'Which model for which workload?'", "Primary": "https://newsroom.accenture.com/blogs/2026/accenture-helps-organizations-unlock-greater-ai-choice-and-control-with-open-weight-models", "Coverage": "", "Source": "Accenture"}, {"Date": "2026-08", "Headline": "AT&T uses model routing and open models to attack AI token costs", "Theme": "Enterprise AI Adoption", "Sub-theme": "AI Cost Optimization / Routing", "Industry": "Telecommunications", "Company": "AT&T", "Why": "As AI usage scales, token economics can become a material operating constraint; routing can preserve performance while reducing cost.", "Summary": "AT&T describes production use of a cache-aware router that selects cost-effective models and increased use of open models trained for telco-specific tasks.", "Implication": "FinOps for AI is becoming architecture: model routing, caching and workload-specific models can be as important as model capability.", "Hook": "AI cost optimization is becoming an architecture decision, not a procurement negotiation.", "Primary": "https://about.att.com/blogs/2026/the-tokenomics-equation.html", "Coverage": "", "Source": "AT&T"}, {"Date": "2026-09-03", "Headline": "MIT identifies 10 levers that determine whether GenAI improves worker performance", "Theme": "Enterprise AI Adoption", "Sub-theme": "Workforce / Human-in-the-loop", "Industry": "Cross-industry / Workforce", "Company": "MIT", "Why": "AI productivity depends on deployment choices and worker context, not merely giving employees access to models.", "Summary": "MIT summarizes work showing that employers should study variation in how people use AI and design human-in-the-loop work intentionally.", "Implication": "Enterprise adoption metrics should capture who benefits, under what conditions and how work changes — not simply active users or tokens consumed.", "Hook": "AI can make work faster without making work better — MIT says the deployment design decides which one you get.", "Primary": "", "Coverage": "https://mitsloan.mit.edu/ideas-made-to-matter/10-levers-shaping-generative-ai-truly-improves-worker-performance", "Source": "MIT Sloan"}]}, {"title": "Governance Is Moving Closer to Runtime", "keywords": ["governance", "agent", "security", "identity", "permissions", "runtime", "control", "audit", "oversight"], "summary": "Governance is expanding beyond policies and model reviews toward controls embedded in actual execution: agent identity, permissions, tool access, monitoring, audit trails and escalation.", "why": "As AI systems move from answering questions to taking actions, governance has to follow the action path—not just the model lifecycle.", "stories": [{"Date": "2026-09-08", "Headline": "LPL Financial builds AI governance into infrastructure, SDLC and risk processes", "Theme": "AI Governance Trends", "Sub-theme": "Governance Operating Model", "Industry": "Financial Services / Wealth Management", "Company": "LPL Financial", "Why": "Governance is moving from a review gate to an embedded operating capability spanning data, models, software delivery and risk.", "Summary": "LPL's governance blueprint includes data segregation, semantic layers, knowledge graphs, catalogs, business meaning, model management and a control plane, with governance embedded in SDLC and risk assessment.", "Implication": "A concrete named-company example of governance-by-design rather than governance-after-deployment.", "Hook": "AI governance is moving inside the SDLC — not sitting beside it.", "Primary": "https://www.cdomagazine.tech/ai-governance/beth-hiatt-on-building-ai-governance-at-lpl-financial-infrastructure-process-and-meaning", "Coverage": "", "Source": "CDO Magazine"}, {"Date": "2026-09-08", "Headline": "AI governance standards are fragmenting faster than they are converging", "Theme": "AI Governance Trends", "Sub-theme": "Standards / Regulation", "Industry": "Cross-industry / Regulation & Standards", "Company": "ISO / EU AI Act ecosystem", "Why": "Organizations can mistakenly treat certification against one framework as proof of compliance with another, creating governance blind spots.", "Summary": "CSA notes a proliferation of AI security/governance initiatives and warns against assuming ISO/IEC 42001 certification automatically implies EU AI Act readiness.", "Implication": "Governance teams need a control-mapping layer across standards rather than collecting certifications independently.", "Hook": "AI governance has a new problem: too many standards can create the illusion of control.", "Primary": "https://labs.cloudsecurityalliance.org/research/csa-research-note-ai-governance-fragmentation-20260908-csa-s/", "Coverage": "", "Source": "Cloud Security Alliance"}, {"Date": "2026-09-04", "Headline": "OWASP's 2026 list elevates Excessive Agency as an LLM risk", "Theme": "AI Risk & Security", "Sub-theme": "Excessive Agency / Hidden Context", "Industry": "Cross-industry / Cybersecurity", "Company": "OWASP ecosystem", "Why": "The threat model is expanding from prompt leakage to agent autonomy, memory, retrieved documents, tool responses and application state.", "Summary": "CSA summarizes OWASP's 2026 GenAI Top 10, where Excessive Agency rises and Hidden Context Exposure broadens confidentiality concerns beyond the system prompt.", "Implication": "Agent security controls should cover context, memory, tools and permissions — not only prompt injection.", "Hook": "Prompt injection isn't disappearing; the attack surface is getting much bigger than the prompt.", "Primary": "https://labs.cloudsecurityalliance.org/research/csa-research-note-owasp-genai-top10-2026-agent-control-stand/", "Coverage": "", "Source": "Cloud Security Alliance"}, {"Date": "2026-09-03", "Headline": "Open-weight models become part of the enterprise AI stack", "Theme": "Enterprise AI Adoption", "Sub-theme": "Open-weight Models / Model Economics", "Industry": "Cross-industry", "Company": "Cross-industry enterprises", "Why": "Rising proprietary-model costs and sovereignty concerns are pushing enterprises toward open-weight alternatives, but operating cost and governance still matter.", "Summary": "Gartner argues open-weight models should be part of the enterprise AI stack and provides a framework for deciding where they offer cost efficiency, control and innovation.", "Implication": "Enterprise architecture is moving toward portfolios of models selected by workload economics, control requirements and risk—not one default frontier model.", "Hook": "Open weights are no longer the cheap alternative — Gartner says they need to be part of the enterprise AI stack.", "Primary": "https://www.gartner.com/en/documents/8343517", "Coverage": "", "Source": "Gartner"}]}];
+const GLOSSARY=[["Model Routing", "Automatically choosing which AI model should handle a task based on factors such as quality, cost, latency or risk."], ["Open-Weight Model", "A model whose trained weights are available for organizations to run, adapt or fine-tune themselves."], ["AI FinOps", "Managing AI consumption and cost using metrics such as token usage, inference cost, caching and cost-per-task."], ["Context Engineering", "Designing the information, memory, retrieval and instructions supplied to an AI system so it performs reliably and efficiently."], ["Agentic AI", "AI systems that can plan, use tools and take actions across multiple steps rather than only generate a response."], ["Runtime Governance", "Controls applied while an AI system is actually operating—such as permissions, monitoring, policy checks, logging and escalation."]];
+
+const NEW_TRENDS=[["Specialization becomes a concrete model option", "Koa makes workflow specialization tangible, while its research shows why task gains should not be confused with overall frontier leadership.", "Ask for a workload-specific comparison before changing your model portfolio.", [3, 7]], ["Business context moves into the agent interface", "AIforce and Splunk’s data announcements emphasize governed access to operational context across existing systems.", "Treat data discovery, permissions and action boundaries as one design problem.", [4, 2]], ["Cost and security enter the operating loop", "Splunk’s spending visibility and HCLTech’s security partnership connect agent expansion with ongoing oversight.", "Make cost and incident ownership part of the deployment decision.", [5, 6]], ["Implementation and assurance remain unfinished work", "Pulse packages execution support; governance research highlights the limits of assuming that extensive policy coverage equals risk coverage.", "Require delivery evidence and a risk map suited to your sector.", [0, 1]]];
+const NEW_TERMS=[["Workflow specialization", "Adapting a model to the tools, decisions and constraints of a particular business process."], ["Federated search", "Querying data across supported systems without first moving it all into one repository."], ["Token cost attribution", "Assigning model consumption to the agents, teams or workflows that generated it."], ["Workflow evaluation", "Testing an entire sequence of actions, including failures, recovery and human intervention."]];
+const COMPARISON="Compared with the Sep 3–9 edition’s emphasis on governance infrastructure and model economics, this selection adds concrete product mechanisms for context access, specialization and spend visibility. Aug 27–Sep 2 emphasized operating readiness; that concern persists. These are editorial comparisons of selected coverage, not measured market acceleration. The retained editions are not consecutive with Sep 14–20; no Sep 10–13 coverage is implied.";
+const esc=s=>(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+
+function inActiveWeek(x){
+  const d=(x.Date||"").slice(0,10);
+  return /^\d{4}-\d{2}-\d{2}$/.test(d) && d>=activeWeek.start && d<=activeWeek.end;
+}
+
+function activeData(){
+  return DATA.filter(inActiveWeek);
+}
+
+function buildWeekPills(){
+  const box=document.getElementById('weekPills');
+  box.innerHTML=WEEKS.map((w,i)=>`<button class="week-pill ${i===0?'active':''}" data-week="${esc(w.id)}">${esc(w.label)}</button>`).join('');
+  box.querySelectorAll('.week-pill').forEach(btn=>{
+    btn.onclick=()=>{
+      activeWeek=WEEKS.find(w=>w.id===btn.dataset.week)||WEEKS[0];
+      box.querySelectorAll('.week-pill').forEach(x=>x.classList.toggle('active',x===btn));
+      document.getElementById('activeWeekLabel').textContent=activeWeek.fullLabel;
+      renderHighlights();
+      populateThemeFilter();
+      renderSignals();
+    };
+  });
+  document.getElementById('activeWeekLabel').textContent=activeWeek.fullLabel;
+}
+
+function renderHighlights(){
+  const weekSignals=activeData();
+  document.getElementById('execSummary').textContent=activeWeek.synthesis;
+  document.getElementById('connectText').textContent=activeWeek.connect;
+  document.getElementById('leaderQuestion').textContent=activeWeek.question;
+
+  // Build up to 3 weekly trend cards from the most frequent themes in that week's signals.
+  const grouped={};
+  weekSignals.forEach(s=>{
+    const key=s.PrimaryDomain||"Other";
+    (grouped[key]??=[]).push(s);
+  });
+  const topGroups=Object.entries(grouped)
+    .sort((a,b)=>b[1].length-a[1].length)
+    .slice(0,3);
+
+  const fallback=[
+    ["Enterprise AI Adoption", "How enterprises are moving from pilots toward production use, workflow redesign and measurable operating value."],
+    ["AI Governance & Responsible AI", "How controls, accountability and assurance are moving closer to deployment and runtime."],
+    ["Frontier Models & Economics", "How model choice, open-weight options, routing and cost are changing enterprise architecture."]
+  ];
+
+  const cards=(topGroups.length?topGroups:fallback.map(([k,summary])=>[k,[]])).map(([themeName,stories],i)=>{
+    const first=stories[0];
+    const summary=first
+      ? `${stories.length} signal${stories.length===1?'':'s'} this week point to ${first.Why.charAt(0).toLowerCase()+first.Why.slice(1)}`
+      : fallback[i]?.[1]||"Emerging enterprise AI pattern.";
+    const why=first?.Implication || "Watch how this theme develops across enterprise adoption, architecture and governance.";
+    const sources=stories.length
+      ? [...new Set(stories.map(s=>s.Company&&s.Company!=="—"?s.Company:s.Source).filter(Boolean))].slice(0,4).join(" · ")
+      : "Archive placeholder";
+    return `
+      <div class="trend-card">
+        <div class="eyebrow">Weekly Trend ${i+1}</div>
+        <h3>${esc(themeName)}</h3>
+        <p>${esc(summary)}</p>
+        <p class="why">${esc(why)}</p>
+        <div class="sources">Signals behind this trend: ${esc(sources)}</div>
+      </div>`;
+  });
+
+  document.getElementById('trendGrid').innerHTML=cards.join('');
+
+  document.getElementById('glossGrid').innerHTML=GLOSSARY.map(([term,def])=>`
+    <div class="term"><b>${esc(term)}</b><span>${esc(def)}</span></div>`).join('');
+
+  document.querySelector('.summary h2').textContent=activeWeek.id===WEEKS[0].id?'Enterprise AI moves closer to the workflow':'Patterns from the archived edition';
+  document.getElementById('comparison').textContent=activeWeek.id===WEEKS[0].id?COMPARISON:'Archived edition preserved from the existing newsletter. Historical sources have not been re-audited for this update.';
+  if(activeWeek.id===WEEKS[0].id){
+    document.getElementById('trendGrid').innerHTML=NEW_TRENDS.map((t,i)=>`<div class="trend-card"><div class="eyebrow">Weekly trend ${i+1}</div><h3>${esc(t[0])}</h3><p>${esc(t[1])}</p><p class="why">${esc(t[2])}</p><div class="sources">Sources: ${t[3].map(n=>`<a href="${esc(DATA[n].Primary)}" target="_blank" rel="noopener">${esc(DATA[n].Source)}</a>`).join(' · ')}</div></div>`).join('');
+    document.getElementById('glossGrid').innerHTML=NEW_TERMS.map(([t,d])=>`<div class="term"><b>${esc(t)}</b><span>${esc(d)}</span></div>`).join('');
+  }
+}
+
+function populateThemeFilter(){
+  const theme=document.getElementById('theme');
+  const current=theme.value;
+  theme.innerHTML='<option value="">All Domains</option>';
+  DOMAINS.forEach(v=>theme.add(new Option(v,v)));
+  if([...theme.options].some(o=>o.value===current)) theme.value=current;
+}
+
+function renderSignals(){
+  const weekSignals=activeData();
+  const f=weekSignals.filter(x=>!theme.value||x.PrimaryDomain===theme.value);
+  document.getElementById('count').textContent=`${f.length} signal${f.length===1?'':'s'} · ${activeWeek.label}`;
+  document.getElementById('signals').innerHTML=f.length ? f.map(x=>`
+    <article class="signal" data-id="${DATA.indexOf(x)}">
+      <div class="tags"><span class="tag">${esc(x.PrimaryDomain)}</span>${x.Company?`<span class="tag">${esc(x.Company)}</span>`:''}</div>
+      <h3>${esc(x.Headline)}</h3>
+      <div class="why">${esc(x.Why)}</div>
+      <div class="bottom"><span>${esc(x.Source)} · ${esc(x.Date)}</span><span class="open">Read signal →</span></div>
+    </article>`).join('') :
+    `<div class="summary"><h2>No selected signals in this domain for this edition.</h2><p>Choose All Domains to see the full edition.</p></div>`;
+  document.querySelectorAll('.signal').forEach(el=>el.onclick=()=>openDrawer(DATA[+el.dataset.id]));
+}
+function openDrawer(x){
+  document.getElementById('dm').textContent=x.PrimaryDomain+(x['Sub-theme']?` · ${x['Sub-theme']}`:'');
+  document.getElementById('dt').textContent=x.Headline;
+  document.getElementById('dc').textContent=[x.Company,x.Industry,x.Source].filter(Boolean).join(' · ');
+  document.getElementById('ds').textContent=x.Summary||'—';
+  document.getElementById('dw').textContent=x.Why||'—';
+  document.getElementById('di').textContent=x.Implication||'—';
+  document.getElementById('dh').textContent=x.Hook||'—';
+  let links=[]; if(x.Primary)links.push(`<a href="${x.Primary}" target="_blank" rel="noopener">Read primary source ↗</a>`); if(x.Coverage)links.push(`<a href="${x.Coverage}" target="_blank" rel="noopener">Read coverage ↗</a>`);
+  document.getElementById('links').innerHTML=links.join('');
+  document.getElementById('modal').classList.add('show');
+}
+document.querySelectorAll('.tab').forEach(btn=>btn.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));btn.classList.add('active');document.getElementById(btn.dataset.tab).classList.add('active')});
+theme.onchange=renderSignals;document.getElementById('close').onclick=()=>document.getElementById('modal').classList.remove('show');document.getElementById('modal').onclick=e=>{if(e.target.id==='modal')e.target.classList.remove('show')};
+buildWeekPills();populateThemeFilter();renderHighlights();renderSignals();
+</script>
+</body></html>
